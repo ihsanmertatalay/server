@@ -23,4 +23,7 @@ app.listen(process.env.PORT, () => {
     .catch((err) => console.log(err));
 });
 
-module.exports.handler = serverless(app)
+app.use(`/.netlify/functions/api`, router);
+
+module.exports = app;
+module.exports.handler = serverless(app);

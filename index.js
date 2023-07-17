@@ -3,7 +3,6 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import router from './router/router.js'
-import serverless from 'serverless-http'
 
 const app = express();
 app.use(cors());
@@ -22,8 +21,3 @@ app.listen(process.env.PORT, () => {
     .then(console.log("connected to server"))
     .catch((err) => console.log(err));
 });
-
-app.use(`/.netlify/functions/api`, router);
-
-module.exports = app;
-module.exports.handler = serverless(app);

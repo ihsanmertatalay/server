@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build": "NODE_ENV=production ./node_modules/.bin/netlify-lambda build src"
   },
   "type": "module",
   "author": "mert",
@@ -15,6 +16,8 @@
     "express": "^4.18.2",
     "mongoose": "^7.2.4",
     "multer": "^1.4.5-lts.1",
-    "nodemon": "^2.0.22"
+    "netlify-lambda": "^2.0.16",
+    "nodemon": "^2.0.22",
+    "serverless-http": "^3.2.0"
   }
 }

@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "build": "npm i"
+    "start": "nodemon index.js"
   },
   "type": "module",
   "author": "mert",
@@ -16,8 +15,6 @@
     "express": "^4.18.2",
     "mongoose": "^7.2.4",
     "multer": "^1.4.5-lts.1",
-    "netlify-lambda": "^2.0.16",
-    "nodemon": "^2.0.22",
-    "serverless-http": "^3.2.0"
+    "nodemon": "^2.0.22"
   }
 }

@@ -12,7 +12,7 @@ app.use(express.json());
 
 dotenv.config();
 
-app.use('/.netlify/functions/api', router);
+app.use('/posts', router);
 
 app.listen(process.env.PORT, () => {
   mongoose

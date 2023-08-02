@@ -6,23 +6,17 @@ import myNumber from "../db/number.js";
 import myUser from "../db/user.js";
 import Photo from "../db/photo.js";
 
-
-
-
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: './uploads',
+  destination: "./uploads",
   filename: (req, file, cb) => {
-    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const extension = path.extname(file.originalname);
     cb(null, `${file.fieldname}-${uniqueSuffix}${extension}`);
   },
 });
 const upload = multer({ storage });
-
-
-
 
 router.get("/", async (req, res) => {
   try {
@@ -44,28 +38,9 @@ router.get("/photo", async (req, res) => {
 
 router.post("/photo", async (req, res) => {
   try {
-    const photo = req.body
-    const createdPhoto = await Photo.create(photo)
+    const photo = req.body;
+    const createdPhoto = await Photo.create(photo);
     res.status(201).json(createdPhoto);
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-
-router.get("/n", async (req, res) => {
-  try {
-    const nums = await myNumber.find();
-    res.json(nums);
-  } catch (error) {
-    console.log(error);
-  }
-});
-router.post("/n", async (req, res) => {
-  try {
-    const num = req.body;
-    const creatednum = await myNumber.create(num);
-    res.status(201).json(creatednum);
   } catch (error) {
     console.log(error);
   }
@@ -88,6 +63,48 @@ router.post("/user", async (req, res) => {
     console.log(error);
   }
 });
+router.put("/user", async (req, res) => {
+  try {
+    const updatedUsers = req.body;
+
+    // Loop through the updatedUsers array and update each user individually
+    const updatedUsersPromises = updatedUsers.map(async (updatedUser) => {
+      const { _id, email, password, photo, friends, posts, messages, image } =
+        updatedUser;
+
+      // Find the user by their unique identifier
+      const user = await myUser.findById(_id);
+
+      if (!user) {
+        // Handle the case where the user is not found
+        throw new Error(`User with ID ${_id} not found`);
+      }
+
+      // Update the user properties
+      user.email = email;
+      user.password = password;
+      user.photo = photo;
+      user.friends = friends;
+      user.posts = posts;
+      user.messages = messages;
+      user.image = image;
+
+      // Save the updated user in the database
+      await user.save();
+
+      return user;
+    });
+
+    // Wait for all users to be updated
+    const updatedUsersResult = await Promise.all(updatedUsersPromises);
+
+    res.json(updatedUsersResult);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 router.get("/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -115,12 +132,20 @@ router.delete("/user/:id", async (req, res) => {
 router.put("/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { email, password,friends, posts,messages,image } = req.body;
+    const { email, password, friends, posts, messages, image } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).send("user bulunamadı");
     }
-    const updatedUser = {  email, password, posts,friends,messages,image, _id: id };
+    const updatedUser = {
+      email,
+      password,
+      posts,
+      friends,
+      messages,
+      image,
+      _id: id,
+    };
     await myUser.findByIdAndUpdate(id, updatedUser, { new: true });
 
     res.json(updatedUser);
